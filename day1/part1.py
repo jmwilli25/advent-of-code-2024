@@ -1,7 +1,7 @@
 left_array = []
 right_array = []
 
-with open("artifacts/day1.0.0.txt", "r") as f:
+with open("artifacts/day1.full.txt", "r") as f:
     for line in f:
         left, right = line.split(",")
         left_array.append(int(left))
