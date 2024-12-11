@@ -14,6 +14,9 @@ with open("artifacts/day2.full.txt", "r") as f:
 safe_count = 0
 for report in reports_array:
     direction_array = []
+
+    # iterate through the report and check if the adjacent levels are within the tolerance
+    # and if the levels are ascending or descending between the adjacent levels
     for i in range(0, len(report) - 1):
         adjacent_levels_within_tolerance = report_distance_within_range(report[i], report[i + 1])
         if report[i] > report[i + 1] and adjacent_levels_within_tolerance:
@@ -22,6 +25,8 @@ for report in reports_array:
             direction_array.append("ascending")
         else:
             direction_array.append("level")
+
+    # convert to set to get unique values
     direction = set(direction_array)
     if len(direction) == 1 and "level" not in direction:
         safe_count += 1
