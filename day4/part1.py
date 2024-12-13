@@ -41,7 +41,7 @@ def check_direction(matrix, x, y, dx, dy):
 
     return matrix[x][y] + matrix[x+1*dx][y+1*dy] + matrix[x+2*dx][y+2*dy] + matrix[x+3*dx][y+3*dy] == "XMAS"
 
-def xmas_detector(x_cord: int, y_cord: int, matrix: list[list[int]]) -> int:
+def xmas_detector(x_cord: int, y_cord: int, matrix: list[list[str]]) -> int:
     local_count = 0
     for x_direction_offset, y_direction_offset in direction_offsets:
         if check_direction(matrix, x_cord, y_cord, x_direction_offset, y_direction_offset):
