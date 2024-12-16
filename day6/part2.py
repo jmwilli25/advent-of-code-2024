@@ -49,6 +49,47 @@ with open("artifacts/day6.full.txt", "r") as f:
     for row in f:
         floorplan_matrix.append(list(replace_arrow_with_cardinal(row.strip("\n"))))
 
+##################### Get the positions and directions of a successful traversal #####################
+# Find the guard and the direction they are facing
+success_guard_position_and_direction: dict[str, list[int]] = find_guard_and_direction(floorplan_matrix, direction_offsets.keys())
+
+# y, x
+success_guard_position = success_guard_position_and_direction["position"]
+# N, E, S, W
+success_guard_direction = success_guard_position_and_direction["direction"]
+
+success_guard_position_history = [f"{success_guard_position[0]},{success_guard_position[1]}"]
+
+# Step through floorplan_matrix in the direction of the guard until we hit an obstacle
+success_still_walking = True
+success_clear_path = True
+while success_still_walking:
+    while success_clear_path:
+        # Look ahead in the direction of the guard to find the obstacle
+        # Y is inverted because the top left of the matrix is (0, 0)
+        success_next_step = [success_guard_position[0] - direction_offsets[success_guard_direction][0], success_guard_position[1] + direction_offsets[success_guard_direction][1]]
+        # Test if the guard is at the edge of the floorplan
+        if success_next_step[0] < 0 or success_next_step[1] < 0 or success_next_step[0] >= len(floorplan_matrix) or success_next_step[1] >= len(floorplan_matrix[success_next_step[0]]):
+            success_still_walking = False
+            success_clear_path = False
+        # Test if the guard has hit an obstacle
+        elif floorplan_matrix[success_next_step[0]][success_next_step[1]] == "#":
+            success_clear_path = False
+            # Turn the guard to the right
+            success_guard_direction = guard_direction_turn[success_guard_direction]
+        else:
+            # Move the guard in the direction they are facing
+            success_guard_position[0] -= direction_offsets[success_guard_direction][0]
+            success_guard_position[1] += direction_offsets[success_guard_direction][1]
+            success_guard_position_history.append(f"{success_guard_position[0]},{success_guard_position[1]}")
+
+    if success_still_walking:
+        success_clear_path = True
+
+success_unique_guard_positions = set(success_guard_position_history)
+
+######################################################################################################
+
 # Find the guard and the direction they are facing
 initial_guard_position_and_direction: dict[str, list[int]] = find_guard_and_direction(floorplan_matrix, direction_offsets.keys())
 
@@ -65,7 +106,7 @@ for y in range(len(floorplan_matrix)):
         print(f"Checking position: {y},{x}")
         guard_position_history = [f"{initial_guard_direction},{initial_guard_position[0]},{initial_guard_position[1]}"]
         floorplan_matrix_copy = copy.deepcopy(floorplan_matrix)
-        if floorplan_matrix_copy[y][x] == ".":
+        if floorplan_matrix_copy[y][x] == "." and floorplan_matrix_copy[y][x] not in ['N', 'E', 'S', 'W'] and f"{y},{x}" in success_unique_guard_positions:
             floorplan_matrix_copy[y][x] = "#"
             guard_position = initial_guard_position.copy()
             guard_direction = initial_guard_direction
