@@ -1,0 +1,2 @@
+part2 only test placing an obstacle in the path of successful traversal. No need to test other locations because they
+never intersect with the successful path.
