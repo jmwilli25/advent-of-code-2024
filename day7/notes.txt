@@ -1,0 +1,2 @@
+Create sieves:
+1. If the two smallest numbers add up to be larger than the target number, skip.
